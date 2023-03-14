@@ -10,30 +10,35 @@ let numOfBars = slider.value;
 let heightFactor = 4;
 let speedFactor = 100;
 let unsorted_array = new Array(numOfBars);
-
+//whenever the slider is moved this function is triggered
 slider.addEventListener("input", function () {
+  //the numberofbars and maxrange is changed
   numOfBars = slider.value;
   maxRange = slider.value;
-  //console.log(numOfBars);
+  //the bar container element is cleared and unsorted array is assigned with new random array
   bars_container.innerHTML = "";
   unsorted_array = createRandomArray();
+  //the new random array is rendered
   renderBars(unsorted_array);
 });
 
 speed.addEventListener("change", (e) => {
+  //changes the string value of speed input to integer
   speedFactor = parseInt(e.target.value);
 });
 
+/*
+//if we have multiple sorting option in dropdown menu then we use this
 let algotouse = "";
 
 select_algo.addEventListener("change", function () {
   algotouse = select_algo.value;
-});
-
+});*/
+//it generates the random integer function between the given range of max and min value
 function randomNum(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
+//creates a random array
 function createRandomArray() {
   let array = new Array(numOfBars);
   for (let i = 0; i < numOfBars; i++) {
@@ -42,106 +47,94 @@ function createRandomArray() {
 
   return array;
 }
-
+//usnsorted array  is given the value of random array
 document.addEventListener("DOMContentLoaded", function () {
   unsorted_array = createRandomArray();
   renderBars(unsorted_array);
 });
-
+//create a new div element for each element of array
 function renderBars(array) {
   for (let i = 0; i < numOfBars; i++) {
     let bar = document.createElement("div");
     bar.classList.add("bar");
+    //height is set by multiplying the the value of element of arry by heightfactor
     bar.style.height = array[i] * heightFactor + "px";
+    //new bar element is added as child element of bars_container
     bars_container.appendChild(bar);
   }
 }
-
+//generate a new random array
 randomize_array.addEventListener("click", function () {
   unsorted_array = createRandomArray();
   bars_container.innerHTML = "";
   renderBars(unsorted_array);
 });
-
+//to pause the execution of the code for a few milliseconds after each step , allowing the user to see the bars moving and changing positions on the screen.
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function mergeSort(arr) {
-  //all the element that fall under class bar are stored in bars variable
+async function mergeSort(arr, start = 0, end = arr.length - 1) {
+  //all the elements that fall under class bar are stored in bars variable
   let bars = document.getElementsByClassName("bar");
   //base case
-  if (arr.length < 2) {
-    return arr;
+  if (start >= end) {
+    return;
   }
-  //dividing array into two half
-  const middle = Math.floor(arr.length / 2);
-  const left = arr.slice(0, middle);
-  const right = arr.slice(middle);
+  //dividing array into two halves
+  const middle = Math.floor((start + end) / 2);
   //recursively call the function until base case is achieved
-  await mergeSort(left);
-  await mergeSort(right);
+  await mergeSort(arr, start, middle);
+  await mergeSort(arr, middle + 1, end);
 
-  let i = 0;
-  let j = 0;
-  let k = 0;
-//compare the elements of two arrays and insert in the new array
-  while (i < left.length && j < right.length) {
-    if (left[i] < right[j]) {
-      arr[k] = left[i];
+  let i = start;
+  let j = middle + 1;
+  let k = start;
+  //new array to store the sorted array
+  let temp = new Array(end - start + 1);
+  //compare the elements of two arrays and insert in the new array
+  while (i <= middle && j <= end) {
+    if (arr[i] < arr[j]) {
+      temp[k - start] = arr[i];
       i++;
-      } else {
-      arr[k] = right[j];
+    } else {
+      temp[k - start] = arr[j];
       j++;
-      }
-    
-
-    //visualize it for right and left side
-    bars[k].style.height = arr[k] * heightFactor + "px";
-    bars[k].style.backgroundColor = "lightgreen";
-    if (k + arr.length < bars.length) {
-      bars[k + arr.length].style.height = arr[k] * heightFactor + "px";
-      console.log(arr[k] * heightFactor);
-      bars[k + arr.length].style.backgroundColor = "yellow";
     }
-    await sleep(speedFactor);
-    //bars[k].innerText = arr[k];
-
     k++;
   }
-//if more elements are left in left array
-  while (i < left.length) {
-    arr[k] = left[i];
-    bars[k].style.height = arr[k] * heightFactor + "px";
-    bars[k].style.backgroundColor = "lightgreen";
-    await sleep(speedFactor);
+//copy the remaining element of right sub array and left sub array
+  while (i <= middle) {
+    temp[k - start] = arr[i];
     i++;
     k++;
   }
-//if more elements are left in right array
-  while (j < right.length) {
-    arr[k] = right[j];
-    bars[k].style.height = arr[k] * heightFactor + "px";
-    bars[k].style.backgroundColor = "lightgreen";
-    await sleep(speedFactor);
+
+  while (j <= end) {
+    temp[k - start] = arr[j];
     j++;
     k++;
   }
-//to give the sorted bars of array same color
-for (let k = 0; k < bars.length; k++) {
-    bars[k].style.backgroundColor = "aqua";
+  //copy temp array back to original array
+  for (let i = start; i <= end; i++) {
+    arr[i] = temp[i - start];
+    //update the height of the bars to reflect the sorted order
+    bars[i].style.height = arr[i] * heightFactor + "px";
+    bars[i].classList.add("sorted");
+    await sleep(speedFactor);
   }
- return arr;
+
 }
 
 
-sort_btn.addEventListener("click", function () {
-  
-        mergeSort(unsorted_array);
-     
-      
-      
 
-     
-  }
+sort_btn.addEventListener("click", function () {
+
+  mergeSort(unsorted_array);
+
+
+
+
+
+}
 );
