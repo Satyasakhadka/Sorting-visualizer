@@ -27,13 +27,13 @@ speed.addEventListener("change", (e) => {
   speedFactor = parseInt(e.target.value);
 });
 
-/*
+
 //if we have multiple sorting option in dropdown menu then we use this
 let algotouse = "";
 
 select_algo.addEventListener("change", function () {
   algotouse = select_algo.value;
-});*/
+});
 //it generates the random integer function between the given range of max and min value
 function randomNum(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -130,15 +130,61 @@ async function mergeSort(arr, start = 0, end = arr.length - 1) {
 
 }
 
+async function SelectionSort(arr){
+  let bars = document.getElementsByClassName("bar");
+  for (let i = 0; i < arr.length-1; i++)
+  {
+    
+    let k=i;
+    for(let j=k=i; j<arr.length; j++)
+    {
+      if (arr[j]<arr[k])
+      {
+        k=j;
+        bars[k].style.height= arr[k]*heightFactor+"px";
+        bars[k].style.backgroundColor="lightgreen";
+        await sleep(speedFactor);
+      }
+    }
+      swap(arr, i, k, bars)
+      for (let k = 0; k < bars.length; k++) {
+        bars[k].style.backgroundColor = "aqua";
+  }
+ 
+}
+}
 
+async function swap(array, i, j, bars) {
+  let temp = array[i];
+  array[i] = array[j];
+  array[j] = temp;
+  bars[i].style.height = array[i] * heightFactor + "px";
+  bars[j].style.height = array[j] * heightFactor + "px";
+  bars[i].style.backgroundColor = "red";
+  bars[j].style.backgroundColor = "red";
+  await sleep(speedFactor);
+
+  for (let k = 0; k < bars.length; k++) {
+    if (k != i && k != j) {
+      bars[k].style.backgroundColor = "aqua";
+    }
+  }
+  //bars[i].innerText = array[i];
+  //bars[j].innerText = array[j];
+  return array;
+}
 
 sort_btn.addEventListener("click", function () {
+  
 
-  mergeSort(unsorted_array);
+  switch (algotouse) {
+    case "merge":
+      mergeSort(unsorted_array);
+      break;
 
-
-
-
-
+      case "selection":
+      SelectionSort(unsorted_array);
+      break;
+}
 }
 );
