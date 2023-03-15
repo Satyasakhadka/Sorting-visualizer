@@ -74,6 +74,44 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+
+
+async function insertionSort(array) {
+  let bars = document.getElementsByClassName("bar");
+  for (let i = 1; i < array.length; i++) {
+    let key = array[i];
+    let j = i - 1;
+    while (j >= 0 && array[j] > key) {
+      array[j + 1] = array[j];
+      bars[j + 1].style.height = array[j + 1] * heightFactor + "px";
+      bars[j + 1].style.backgroundColor = "red";
+      //bars[j + 1].innerText = array[j + 1];
+      await sleep(speedFactor);
+
+      for (let k = 0; k < bars.length; k++) {
+        if (k != j + 1) {
+          bars[k].style.backgroundColor = "aqua";
+        }
+      }
+      j = j - 1;
+    }
+    array[j + 1] = key;
+    bars[j + 1].style.height = array[j + 1] * heightFactor + "px";
+    bars[j + 1].style.backgroundColor = "lightgreen";
+    //bars[j + 1].innerText = array[j + 1];
+    await sleep(speedFactor);
+  }
+
+  for (let k = 0; k < bars.length; k++) {
+    bars[k].style.backgroundColor = "aqua";
+  }
+  return array;
+}
+
+
+
+
+
 async function mergeSort(arr, start = 0, end = arr.length - 1) {
   //all the elements that fall under class bar are stored in bars variable
   let bars = document.getElementsByClassName("bar");
@@ -130,6 +168,20 @@ async function mergeSort(arr, start = 0, end = arr.length - 1) {
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function SelectionSort(arr){
   let bars = document.getElementsByClassName("bar");
   for (let i = 0; i < arr.length-1; i++)
@@ -180,6 +232,9 @@ sort_btn.addEventListener("click", function () {
   switch (algotouse) {
     case "merge":
       mergeSort(unsorted_array);
+      break;
+      case "insertion":
+      insertionSort(unsorted_array);
       break;
 
       case "selection":
