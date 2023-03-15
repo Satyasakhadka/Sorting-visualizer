@@ -120,8 +120,12 @@ async function mergeSort(arr, start = 0, end = arr.length - 1) {
     arr[i] = temp[i - start];
     //update the height of the bars to reflect the sorted order
     bars[i].style.height = arr[i] * heightFactor + "px";
+    bars[i].style.backgroundColor = "red";
     bars[i].classList.add("sorted");
     await sleep(speedFactor);
+  }
+  for (let k = start; k <=end; k++) {
+    bars[k].style.backgroundColor = "lightgreen";
   }
 
 }
