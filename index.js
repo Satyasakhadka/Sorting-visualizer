@@ -171,12 +171,62 @@ async function mergeSort(arr, start = 0, end = arr.length - 1) {
 
 
 
+// ----------------
+
+async function quickSort(items, left, right) {
+  var index;
+  let bars = document.getElementsByClassName("bar");
+  if (items.length > 1) {
+    index = await partition(items, left, right); //index returned from partition
+    if (left < index - 1) {
+      //more elements on the left side of the pivot
+      await quickSort(items, left, index - 1);
+    }
+    if (index < right) {
+      //more elements on the right side of the pivot
+      await quickSort(items, index, right);
+    }
+  }
+
+  for (let i = 0; i < bars.length; i++) {
+    bars[i].style.backgroundColor = "aqua";
+  }
+  return items;
+}
 
 
 
+async function partition(items, left, right) {
+  let bars = document.getElementsByClassName("bar");
+  let pivotIndex = Math.floor((right + left) / 2);
+  var pivot = items[pivotIndex]; //middle element
+  bars[pivotIndex].style.backgroundColor = "red";
 
+  for (let i = 0; i < bars.length; i++) {
+    if (i != pivotIndex) {
+      bars[i].style.backgroundColor = "aqua";
+    }
+  }
 
+  (i = left), //left pointer
+    (j = right); //right pointer
+  while (i <= j) {
+    while (items[i] < pivot) {
+      i++;
+    }
+    while (items[j] > pivot) {
+      j--;
+    }
+    if (i <= j) {
+      await swap(items, i, j, bars); //sawpping two elements
+      i++;
+      j--;
+    }
+  }
+  return i;
+}
 
+// -----------
 
 
 
@@ -206,6 +256,7 @@ async function SelectionSort(arr){
 }
 }
 
+
 async function swap(array, i, j, bars) {
   let temp = array[i];
   array[i] = array[j];
@@ -221,8 +272,8 @@ async function swap(array, i, j, bars) {
       bars[k].style.backgroundColor = "aqua";
     }
   }
-  //bars[i].innerText = array[i];
-  //bars[j].innerText = array[j];
+  // bars[i].innerText = array[i];
+  // bars[j].innerText = array[j];
   return array;
 }
 
@@ -233,6 +284,7 @@ sort_btn.addEventListener("click", function () {
     case "merge":
       mergeSort(unsorted_array);
       break;
+
       case "insertion":
       insertionSort(unsorted_array);
       break;
@@ -240,6 +292,18 @@ sort_btn.addEventListener("click", function () {
       case "selection":
       SelectionSort(unsorted_array);
       break;
+
+      case "quick":
+      console.log(unsorted_array.length);
+      quickSort(unsorted_array, 0, unsorted_array.length - 1);
+      break;
+
+      default:
+      insertionSort(unsorted_array);
+      break;
 }
-}
-);
+});
+
+
+
+
