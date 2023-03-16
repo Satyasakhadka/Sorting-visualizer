@@ -232,30 +232,32 @@ async function partition(items, left, right) {
 
 
 
-async function SelectionSort(arr){
+async function SelectionSort(arr) {
   let bars = document.getElementsByClassName("bar");
-  for (let i = 0; i < arr.length-1; i++)
-  {
-    
-    let k=i;
-    for(let j=k=i; j<arr.length; j++)
-    {
-      if (arr[j]<arr[k])
-      {
-        k=j;
-        bars[k].style.height= arr[k]*heightFactor+"px";
-        bars[k].style.backgroundColor="lightgreen";
-        await sleep(speedFactor);
+  for (let i = 0; i < arr.length - 1; i++) {
+    let k = i;
+    bars[k].style.backgroundColor = "red";
+    for (let j = k + 1; j < arr.length; j++) {
+      bars[j].style.backgroundColor = "yellow";
+      await sleep(speedFactor);
+      if (arr[j] < arr[k]) {
+        if (k != i) {
+          bars[k].style.backgroundColor = "aqua";
+        }
+        k = j;
+        bars[k].style.backgroundColor = "red";
+      } else {
+        bars[j].style.backgroundColor = "aqua";
       }
     }
-      swap(arr, i, k, bars)
-      for (let k = 0; k < bars.length; k++) {
-        bars[k].style.backgroundColor = "aqua";
+    await sleep(speedFactor);
+    swap(arr, i, k, bars);
+    bars[k].style.backgroundColor = "aqua";
+    bars[i].style.backgroundColor = "green";
+    bars[i].style.height = arr[i] * heightFactor + "px";
   }
- 
+  bars[arr.length - 1].style.backgroundColor = "green";
 }
-}
-
 
 async function swap(array, i, j, bars) {
   let temp = array[i];
@@ -266,12 +268,8 @@ async function swap(array, i, j, bars) {
   bars[i].style.backgroundColor = "red";
   bars[j].style.backgroundColor = "red";
   await sleep(speedFactor);
-
-  for (let k = 0; k < bars.length; k++) {
-    if (k != i && k != j) {
-      bars[k].style.backgroundColor = "aqua";
-    }
-  }
+  bars[i].style.backgroundColor = "aqua";
+  bars[j].style.backgroundColor = "aqua";
   // bars[i].innerText = array[i];
   // bars[j].innerText = array[j];
   return array;
