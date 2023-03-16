@@ -229,9 +229,6 @@ async function partition(items, left, right) {
 // -----------
 
 
-
-
-
 async function SelectionSort(arr) {
   let bars = document.getElementsByClassName("bar");
   for (let i = 0; i < arr.length - 1; i++) {
@@ -256,7 +253,7 @@ async function SelectionSort(arr) {
     bars[i].style.backgroundColor = "green";
     bars[i].style.height = arr[i] * heightFactor + "px";
   }
-  bars[arr.length - 1].style.backgroundColor = "green";
+ 
 }
 
 async function swap(array, i, j, bars) {
